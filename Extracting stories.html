@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Stories</title>
+</head>
+<body>
+
+<script>
+   function httpGet(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                callback(null, xhr.responseText);
+            } else {
+                callback('Error: ' + xhr.status);
+            }
+        }
+    };
+
+    // Use the CORS Anywhere proxy before the target URL
+    var corsAnywhereUrl = 'https://cors-anywhere.herokuapp.com/';
+    xhr.open("GET", corsAnywhereUrl + url, true);
+    xhr.send();
+}
+
+// ...
+
+// Make six requests sequentially
+for (var requestNumber = 1; requestNumber <= 6; requestNumber++) {
+    (function(requestNumber) {
+        var url = 'https://time.com';
+        httpGet(url, function(error, response) {
+            if (error) {
+                console.error('Error making HTTP request:', error);
+            } else {
+                var stories = extractStories(response);
+                console.log('Request', requestNumber, ':', stories);
+            }
+        });
+    })(requestNumber);
+}
+
+</script>
+
+</body>
+</html>
